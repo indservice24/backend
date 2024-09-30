@@ -1,11 +1,22 @@
 import express from "express"
 import { addService, listService, removeService, singleService } from "../controller/Servicecontroller.js"
-import upload from "../middleware/multer.js";
 import adminAuth from "../middleware/adminAuth.js";
+import multer from "multer";
+
 
 const serviceRouter = express.Router()
 
-serviceRouter.post('/add',adminAuth,upload.fields([{name:'image1', maxCount:1},{name:'image2', maxCount:1},{name:'image3', maxCount:1},{name:'image4', maxCount:1}]),addService);
+const storage = multer.diskStorage({
+    destination:"upload",
+    filename: function(req,file,cb){
+        return cb(null,`${Date.now()}${file.originalname}`)
+        // return cb(null,Date.now()+(file.originalname));
+    }
+})
+
+const upload = multer({storage:storage})
+
+serviceRouter.post("/add",upload.single("image"),addService);
 serviceRouter.post('/remove', adminAuth,removeService);
 serviceRouter.post('/single',singleService);
 serviceRouter.get('/list',listService);

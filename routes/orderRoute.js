@@ -1,19 +1,12 @@
-// import express from "express"
-// import { allOrders, placeOrder, placeOrderOnline, upadteOrderstatus, userOrders } from "../controller/orderController.js"
-// import adminAuth from '../middleware/adminAuth.js'
+import express from "express"
+import {addorder,listorder,assignOrderToPartner,completeOrder} from "../controller/orderController.js"
 
-// const orderRouter = express.Router()
+const orderRouter = express.Router()
 
-// // admin feature
-// orderRouter.post('/list',adminAuth,allOrders)
-// orderRouter.post('/status',adminAuth,upadteOrderstatus)
+orderRouter.post('/add',addorder);
+orderRouter.get('/list',listorder);
+orderRouter.post('/assign',assignOrderToPartner);
+orderRouter.post('/complete',completeOrder);
 
-// // payment feature
-// // one missing auth user
-// orderRouter.post('/place',placeOrder)
-// orderRouter.post('/online',placeOrderOnline)
 
-// // user feature
-// orderRouter.post('/userorders',userOrders)
-
-// export default orderRouter;
+export default orderRouter;

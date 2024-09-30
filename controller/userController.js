@@ -13,12 +13,12 @@ const loginUser = async (req, res) => {
         const { email, password } = req.body;
         const user = await userModel.findOne({email});
         if (!user) {
-            return res.json({success: false, message: "User not found"})
+            return res.status(404).json({success: false, message: "User not found"})
         }
         const isMatch = await bcrypt.compare(password, user.password)
         if (isMatch) {
             const token = createToken(user._id)
-            return res.json({success: true, token})
+            return res.json({success: true, token,user})
         } else {
             return res.status(401).json({success: false, message: "Incorrect password"})
         }
@@ -32,18 +32,20 @@ const loginUser = async (req, res) => {
 const signupUser = async (req, res) => {
     const { name, email, password } = req.body;
     try {
+        // email and password checking
+        if (!validator.isEmail(email)) {
+            return res.status(400).json({success: false, message: "Please enter a valid email"})
+        }
+        if (password.length < 8) {
+            return res.status(400).json({success: false, message: "Please enter a strong password (at least 8 characters)"})
+        }
+
         // checking user already exists or not
         const exists = await userModel.findOne({email});
         if (exists) {
-            return res.json({success: false, message: "User already exists"})
+            return res.status(409).json({success: false, message: "User already exists"})
         }
-        // email and password checking
-        if (!validator.isEmail(email)) {
-            return res.json({success: false, message: "Please enter a valid email"})
-        }
-        if (password.length < 8) {
-            return res.json({success: false, message: "Please enter a strong password (at least 8 characters)"})
-        }
+
         // hashing user password
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
@@ -59,8 +61,8 @@ const signupUser = async (req, res) => {
         const token = createToken(user._id)
         res.json({success: true, token})
     } catch (error) {
-        console.log(error);
-        res.json({success: false, message: error.message})
+        console.error("Signup error:", error);
+        res.status(500).json({success: false, message: "An error occurred during signup"})
     }
 }
 
@@ -73,11 +75,11 @@ const adminLogin = async (req, res) => {
         res.json({success:true,token})
     }
     else{
-        res.json({success:false,message:"Invalid Password"})
+        res.status(401).json({success:false,message:"Invalid Password"})
     }
     } catch (error) {
-        console.log(error);
-        res.json({success:false,message:error.message})
+        console.error("Admin login error:", error);
+        res.status(500).json({success:false,message:"An error occurred during admin login"})
     }
 }
 

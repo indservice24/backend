@@ -1,34 +1,26 @@
-import { v2 as cloudinary } from 'cloudinary';
 import serviceModel from '../model/serviceModel.js';
+import fs from 'fs'
+
+
 
 // function for add service
 
 const addService =  async (req,res) => {
     try {
-        const{name,description,price,category} = req.body
-        const image1 = req.files.image1 && req.files.image1[0]
-        const image2 = req.files.image2 && req.files.image2[0]
-        const image3 = req.files.image3 && req.files.image3[0]
-        const image4 = req.files.image4 && req.files.image4[0]
-        const images = [image1,image2,image3,image4].filter((item)=> item !== undefined)
-
-        // const imageUrl = await Promise.all(
-        //     images.map(async (item) => {
-        //         let result = await cloudinary.uploader.upload(item.path,{resource_type:'image'});
-        //         return result.secure_url
-        //     })
-        // )
-        const serviceData = {
-            name,
-            description,
-            price:Number(price),
-            category
-        }
-        const service = new serviceModel(serviceData);
+        let image_file = `${req.file.filename}`;
+        const service = new serviceModel(
+            {
+                name:req.body.name,
+                image:req.body.image_file,
+                description:req.body.description,
+                price:req.body.price,
+                category:req.body.category
+            }
+        );
         await service.save()
 
         res.json({success:true,message:"service add"})
-        console.log(serviceData);
+        // console.log(serviceData);
 
     } catch (error) {
         console.log(error);
@@ -52,8 +44,36 @@ const listService =  async (req,res) => {
 
 const removeService =  async (req,res) => {
 try {
-    await serviceModel.findByIdAndDelete(req.body.id)
-    res.json({success:true,message:"Service deleted"})
+    // fs.unlink(`uploads/${service.image}`, ()=>{})
+    // await serviceModel.findByIdAndDelete(req.body.id)
+    // res.json({success:true,message:"Service deleted"})
+
+    // const service = await serviceModel.findById(req.body.id);
+    // fs.unlink(`upload/${service.image}`, ()=>{})
+    // await serviceModel.findByIdAndDelete(req.body.id);
+    // res.json({succes:true,message:"service Remove"})
+
+    // Find the service by ID
+    const service = await serviceModel.findById(req.body.id);
+    
+    if (!service) {
+        return res.json({ success: false, message: "Service not found" });
+    }
+
+    // Delete the image file if it exists
+    if (service.image) {
+        const imagePath = `upload/${service.image}`;
+        fs.unlink(imagePath, (err) => {
+            if (err) {
+                console.error("Error deleting image file:", err);
+            }
+        });
+    }
+
+    // Delete the service from the database
+    await serviceModel.findByIdAndDelete(req.body.id);
+    res.json({ success: true, message: "Service deleted successfully" });
+
 } catch (error) {
     console.log(error);
     res.json({success:false,message:error.message})
@@ -67,7 +87,7 @@ const singleService =  async (req,res) => {
     try {
         const {serviceId} = req.body
         const service = await serviceModel.findById(serviceId)
-        res.json({success:true,service})
+        res.json({success:true,message:"service deleted"})
     } catch (error) {
         console.log(error);
         res.json({success:false,message:error.message})

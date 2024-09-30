@@ -6,7 +6,11 @@ import mongoose from "mongoose"
 import connectCloudinary from "./config/cloudinary.js"
 import userRouter from "./routes/userRoute.js"
 import serviceRouter from "./routes/serviceRoute.js"
-// import orderRouter from "./routes/orderRoute.js"
+import orderRouter from "./routes/orderRoute.js"
+import partnerRouter from "./routes/partnerRoute.js"
+import contactRouter from "./routes/contactRoute.js"
+
+// import blogRouter from "./routes/blogRoute.js"
 
 
 
@@ -16,14 +20,25 @@ const port = process.env.PORT || 4000
 connectDB()
 connectCloudinary()
 
+
+
+
+
+
+
 // middlewares
-app.use(express.json())
+app.use(express.json({ limit: '50mb' }))
 app.use(cors())
 
 //api endpoints
 app.use('/api/user',userRouter)
 app.use('/api/service',serviceRouter)
-// app.use('/api/order',orderRouter)
+app.use('/api/order',orderRouter)
+app.use('/api/partner',partnerRouter)
+app.use('/api/contact',contactRouter)
+// app.use('/api/blog',blogRouter)
+app.use("/images",express.static('upload'))
+
 
 app.get('/',(req,res) => {
     res.send("API WORKING")
