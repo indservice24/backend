@@ -9,6 +9,7 @@ import serviceRouter from "./routes/serviceRoute.js"
 import orderRouter from "./routes/orderRoute.js"
 import partnerRouter from "./routes/partnerRoute.js"
 import contactRouter from "./routes/contactRoute.js"
+import path from "path/win32"
 
 // import blogRouter from "./routes/blogRoute.js"
 
@@ -37,7 +38,8 @@ app.use('/api/order',orderRouter)
 app.use('/api/partner',partnerRouter)
 app.use('/api/contact',contactRouter)
 // app.use('/api/blog',blogRouter)
-app.use("/images",express.static('upload'))
+// app.use("/upload", express.static(path.join(serviceRouter, "upload")))
+
 
 
 app.get('/',(req,res) => {

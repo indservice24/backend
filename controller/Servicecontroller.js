@@ -6,17 +6,19 @@ import fs from 'fs'
 // function for add service
 
 const addService =  async (req,res) => {
+    
+    
     try {
-        let image_file = `${req.file.filename}`;
-        const service = new serviceModel(
-            {
-                name:req.body.name,
-                image:req.body.image_file,
-                description:req.body.description,
-                price:req.body.price,
-                category:req.body.category
-            }
-        );
+        
+        const {name , image ,price , description,category} = req.body
+        const services =  {
+            name,
+            image,
+            price,
+            description,
+            category
+        }
+        const service = new serviceModel(services);
         await service.save()
 
         res.json({success:true,message:"service add"})
