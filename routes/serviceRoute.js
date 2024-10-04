@@ -9,7 +9,7 @@ const serviceRouter = express.Router()
 
 serviceRouter.post("/add",addService);
 serviceRouter.post('/remove',removeService);
-serviceRouter.post('/single',adminAuth,singleService);
+serviceRouter.post('/single',singleService);
 serviceRouter.get('/list',listService);
 
 export default serviceRouter;

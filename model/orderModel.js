@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema({
-    // userId:{type:String, required:true},
     name:{type:String, required:true},
     number:{type:Number, required:true},
     servicename:{type:String, required:true},
@@ -10,6 +9,7 @@ const orderSchema = new mongoose.Schema({
     city:{type:String, required:true},
     address:{type:String, required:true},
     partnerEmail:{type:String},
+    amount:{type:Number},
     partnerAssigned:{type:String,  enum :['not assigned','assigned'], default:"not assigned"},
     partnerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Partner' },
     status: { type: String, enum: ['completed','cancelled','inprogress'], default: 'inprogress' },

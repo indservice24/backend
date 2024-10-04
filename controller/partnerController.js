@@ -1,5 +1,5 @@
 import validator from "validator";
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import partnerModel from "../model/partnerModel.js";
 import nodemailer from 'nodemailer'
