@@ -1,5 +1,5 @@
 import validator from "validator";
-import bcrypt from "bcryptjs";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import partnerModel from "../model/partnerModel.js";
 import nodemailer from 'nodemailer'
@@ -22,7 +22,7 @@ const partnerlogin = async (req, res) => {
         if (!user) {
             return res.json({success: false, message: "User not found"})
         }
-        const isMatch = await bcrypt.compare(password, user.password)
+        const isMatch = await bcryptjs.compare(password, user.password)
         if (isMatch) {
             const token = createToken(user._id)
             return res.json({success: true, token,user})
@@ -116,8 +116,8 @@ const partnersignup = async (req, res) => {
             return res.json({success: false, message: "plase enter valide otp"})
          }
         // hashing user password
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
+        const salt = await bcryptjs.genSalt(10)
+        const hashedPassword = await bcryptjs.hash(password, salt)
 
         const newUser = new partnerModel({
             name,
