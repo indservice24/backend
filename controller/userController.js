@@ -7,10 +7,7 @@ const createToken = (id, role = 'user') => {
     return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 };
 
-const handleError = (res, statusCode, message) => {
-    console.error(`Error: ${message}`);
-    return res.status(statusCode).json({ success: false, message });
-};
+
 
 // user login
 const loginUser = async (req, res) => {
@@ -19,7 +16,7 @@ const loginUser = async (req, res) => {
     try {
         const user = await userModel.findOne({ email }).select('+password');
         if (!user || !(await bcryptjs.compare(password, user.password))) {
-            return handleError(res, 401, "Invalid email or password");
+             return res.status(401).json({success: false, message: "Please enter a valid email"})
         const { email, password } = req.body;
         const user = await userModel.findOne({email});
         if (!user) {
@@ -37,7 +34,7 @@ const loginUser = async (req, res) => {
         user.password = undefined; // Remove password from response
         res.json({ success: true, token, user });
     } catch (error) {
-        handleError(res, 500, "An error occurred during login");
+        return res.status(401).json({success: false, })
     }
 };
 
@@ -47,15 +44,15 @@ const signupUser = async (req, res) => {
     
     try {
         if (!validator.isEmail(email)) {
-            return handleError(res, 400, "Please enter a valid email");
+            return res.status(401).json({success: false, message: "Please enter a valid email"})
         }
         if (password.length < 8) {
-            return handleError(res, 400, "Please enter a strong password (at least 8 characters)");
+             return res.status(401).json({success: false, message: "Please enter a strong password (at least 8 characters)"})
         }
 
         const existingUser = await userModel.findOne({ email });
         if (existingUser) {
-            return handleError(res, 409, "User already exists");
+             return res.status(401).json({success: false, message: "User already exists"})
         }
 
         const hashedPassword = await bcryptjs.hash(password, 10);
@@ -73,7 +70,7 @@ const signupUser = async (req, res) => {
         const token = createToken(newUser._id);
         res.status(201).json({ success: true, token });
     } catch (error) {
-        handleError(res, 500, "An error occurred during signup");
+       return res.status(401).json({success: false,})
     }
 };
 
@@ -83,13 +80,13 @@ const adminLogin = async (req, res) => {
     
     try {
         if (email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD) {
-            return handleError(res, 401, "Invalid credentials");
+           return res.status(401).json({success: false, message: "Incorrect password"})
         }
 
         const token = createToken(null, 'admin');
         res.json({ success: true, token });
     } catch (error) {
-        handleError(res, 500, "An error occurred during admin login");
+        return res.status(401).json({success: false })
     }
 };
 
