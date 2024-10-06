@@ -14,10 +14,6 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     
     try {
-        const user = await userModel.findOne({ email }).select('+password');
-        if (!user || !(await bcryptjs.compare(password, user.password))) {
-             return res.status(401).json({success: false, message: "Please enter a valid email"})
-        const { email, password } = req.body;
         const user = await userModel.findOne({email});
         if (!user) {
             return res.status(404).json({success: false, message: "User not found"})
@@ -29,9 +25,6 @@ const loginUser = async (req, res) => {
         } else {
             return res.status(401).json({success: false, message: "Incorrect password"})
         }
-
-        const token = createToken(user._id);
-        user.password = undefined; // Remove password from response
         res.json({ success: true, token, user });
     } catch (error) {
         return res.status(401).json({success: false, })
@@ -54,10 +47,6 @@ const signupUser = async (req, res) => {
         if (existingUser) {
              return res.status(401).json({success: false, message: "User already exists"})
         }
-
-        const hashedPassword = await bcryptjs.hash(password, 10);
-        const newUser = await userModel.create({
-        // hashing user password
         const salt = await bcryptjs.genSalt(10)
         const hashedPassword = await bcryptjs.hash(password, salt)
 
