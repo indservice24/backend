@@ -104,7 +104,7 @@ const assignOrderToPartner = async (req, res) => {
 
   // complete order 
   const completeOrder = async (req, res) => {
-    const { orderId ,amount } = req.body;
+    const { orderId ,amount,chargedItem } = req.body;
     try {
       if (!orderId || !amount) {
         return res.status(400).json({ success: false, message: "Missing required fields" });
@@ -115,15 +115,17 @@ const assignOrderToPartner = async (req, res) => {
         { 
           status: 'completed',
           updatedAt: new Date(),
-          amount
+          amount,
+          chargedItem
         },
         { new: true }
       );
 
+      
       if (!order) {
         return res.status(404).json({ success: false, message: "Order not found" });
       }
-
+      order.save();
       res.status(200).json({ success: true, message: 'Order completed', order });
     } catch (error) {
       console.error(error);
@@ -132,4 +134,29 @@ const assignOrderToPartner = async (req, res) => {
   }
 
 
-export {addorder,listorder,assignOrderToPartner,completeOrder}
+  // cancellate order 
+  const cancelOrder = async (req, res) => {
+    const { orderId ,cancelledNote } = req.body;
+    try {
+      if (!orderId) {
+        return res.status(400).json({ success: false, message: "Missing required fields" });
+      }
+      const order = await orderModel.findByIdAndUpdate(
+        orderId,
+        { 
+          status: 'cancelled',
+          updatedAt: new Date(),
+          cancelledNote
+        },
+        { new: true }
+      );
+      order.save();
+      res.status(200).json({ success: true, message: 'Order cancelled', order });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  }     
+
+
+export {addorder,listorder,assignOrderToPartner,completeOrder,cancelOrder}

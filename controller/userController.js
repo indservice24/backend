@@ -1,6 +1,6 @@
 import validator from "validator";
 import userModel from "../model/userModel.js";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const createToken = (id, role = 'user') => {
@@ -18,7 +18,7 @@ const loginUser = async (req, res) => {
     
     try {
         const user = await userModel.findOne({ email }).select('+password');
-        if (!user || !(await bcrypt.compare(password, user.password))) {
+        if (!user || !(await bcryptjs.compare(password, user.password))) {
             return handleError(res, 401, "Invalid email or password");
         }
 
@@ -47,7 +47,7 @@ const signupUser = async (req, res) => {
             return handleError(res, 409, "User already exists");
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcryptjs.hash(password, 10);
         const newUser = await userModel.create({
             name,
             email,
