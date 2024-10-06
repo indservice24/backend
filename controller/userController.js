@@ -17,11 +17,9 @@ const loginUser = async (req, res) => {
     const { email, password } = req.body;
     
     try {
-<<<<<<< HEAD
         const user = await userModel.findOne({ email }).select('+password');
         if (!user || !(await bcryptjs.compare(password, user.password))) {
             return handleError(res, 401, "Invalid email or password");
-=======
         const { email, password } = req.body;
         const user = await userModel.findOne({email});
         if (!user) {
@@ -33,7 +31,6 @@ const loginUser = async (req, res) => {
             return res.json({success: true, token,user})
         } else {
             return res.status(401).json({success: false, message: "Incorrect password"})
->>>>>>> 4a854562115568ba9e2b3565533f69daaeca4d5b
         }
 
         const token = createToken(user._id);
@@ -61,16 +58,13 @@ const signupUser = async (req, res) => {
             return handleError(res, 409, "User already exists");
         }
 
-<<<<<<< HEAD
         const hashedPassword = await bcryptjs.hash(password, 10);
         const newUser = await userModel.create({
-=======
         // hashing user password
         const salt = await bcryptjs.genSalt(10)
         const hashedPassword = await bcryptjs.hash(password, salt)
 
         const newUser = new userModel({
->>>>>>> 4a854562115568ba9e2b3565533f69daaeca4d5b
             name,
             email,
             password: hashedPassword
