@@ -11,7 +11,6 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "bcryptjs": "^2.4.3",
    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "cloudinary": "^2.5.0",
@@ -27,5 +26,5 @@
     "otp-generator": "^4.0.1",
     "path": "^0.12.7",
     "validator": "^13.12.0"
-  },
+  }
 }
