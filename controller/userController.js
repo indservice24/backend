@@ -15,21 +15,20 @@ const createToken = (id, role = 'user') => {
 global.store = {OTP:null};
 
 
-const handleError = (res, statusCode, message) => {
-    console.error(`Error: ${message}`);
-    return res.status(statusCode).json({ success: false, message });
-};
+
 
 // user login
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
     
     try {
-
-        const user = await userModel.findOne({ email });
+<<<<<<< HEAD
+        const user = await userModel.findOne({ email }).select('+password');
         if (!user || !(await bcryptjs.compare(password, user.password))) {
-            return handleError(res, 401, "Invalid email or password"); 
-        }
+            return handleError(res, 401, "Invalid email or password");
+=======
+        const { email, password } = req.body;
+        const user = await userModel.findOne({email});
         if (!user) {
             return res.status(404).json({success: false, message: "User not found"})
         }
@@ -40,14 +39,8 @@ const loginUser = async (req, res) => {
         } else {
             return res.status(401).json({success: false, message: "Incorrect password"})
         }
-
-        const token = createToken(user._id);
-        user.password = undefined; // Remove password from response
         res.json({ success: true, token, user });
-     
-    
-   }
-    catch (error) {
+    } catch (error) {
         handleError(res, 500, "An error occurred during login");
     }
 }
@@ -58,16 +51,21 @@ const signupUser = async (req, res) => {
     
     try {
         if (!validator.isEmail(email)) {
-            return handleError(res, 400, "Please enter a valid email");
+            return res.status(401).json({success: false, message: "Please enter a valid email"})
         }
         if (password.length < 8) {
-            return handleError(res, 400, "Please enter a strong password (at least 8 characters)");
+             return res.status(401).json({success: false, message: "Please enter a strong password (at least 8 characters)"})
         }
 
         const existingUser = await userModel.findOne({ email });
         if (existingUser) {
-            return handleError(res, 409, "User already exists");
+             return res.status(401).json({success: false, message: "User already exists"})
         }
+
+<<<<<<< HEAD
+        const hashedPassword = await bcryptjs.hash(password, 10);
+        const newUser = await userModel.create({
+=======
         // hashing user password
         const salt = await bcryptjs.genSalt(10)
         const hashedPassword = await bcryptjs.hash(password, salt)
@@ -81,7 +79,7 @@ const signupUser = async (req, res) => {
         const token = createToken(newUser._id);
         res.status(201).json({ success: true, token });
     } catch (error) {
-        handleError(res, 500, "An error occurred during signup");
+       return res.status(401).json({success: false,})
     }
 };
 
@@ -93,14 +91,11 @@ const adminLogin = async (req, res) => {
         if (email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD) {
             return handleError(res, 401, "Invalid credentials");
         }
-        if (otp !==  global.store.OTP) {
-            return res.json({success: false, message: "plase enter valide otp"})
-         }
 
         const token = createToken(null, 'admin');
         res.json({ success: true, token });
     } catch (error) {
-        handleError(res, 500, "An error occurred during admin login");
+        return res.status(401).json({success: false })
     }
 };
 
