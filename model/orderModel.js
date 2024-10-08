@@ -26,6 +26,7 @@ const orderSchema = new mongoose.Schema({
     cancelledNote: {type:String},
     status: { type: String, enum: ['completed','cancelled','inprogress'], default: 'inprogress' },
     completedAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
 })
 
 const orderModel = mongoose.models.order || mongoose.model("order" ,orderSchema)

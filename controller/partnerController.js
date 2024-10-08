@@ -46,27 +46,6 @@ const transporter = nodemailer.createTransport({
     },
   });
 
-
-//   async function main() {
-
-//     // const {email} =req.body
-
-//     const otp = generateOtp()
-
-//     global.store.OTP = otp;
-//     console.log(global.store.OTP);
-//     // send mail with defined transport object
-//     const info = await transporter.sendMail({
-//       from: 'rupeshkw9334@gmail.com', // sender address
-//       to: 'rupeshkw9334@gmail.com', // list of receivers
-//       subject: "Hello ✔", // Subject line
-//       text: `your otp is ${otp}`, // plain text body
-//       html: `your otp is ${otp}`, // html body
-//     });
-//   }
-
-
-
 const main = expressAsyncHandler(async(req,res) => {
     const{email} = req.body;
     
@@ -135,7 +114,7 @@ const partnersignup = async (req, res) => {
         })
 
         const user = await newUser.save()
-
+        user.save()
         const token = createToken(user._id)
         res.json({success: true, token, user})
     } catch (error) {
@@ -159,4 +138,26 @@ const listuser = async (req,res) => {
 
 
 
-export { partnerlogin, partnersignup ,main ,listuser};
+//service add by partner
+
+const addService = async (req,res) => {
+    const {id, service} = req.body
+    try {
+        if (!id) {
+            res.json({success: false, message: error.message})
+        }
+
+        const serviced = await partnerModel.findByIdAndUpdate(id, {service: service}, {new: true})
+        res.json({success: true, serviced})
+
+    } catch (error) {
+        console.log(error);
+        res.json({success: false, message: error.message})
+    }
+}
+
+
+
+
+
+export { partnerlogin, partnersignup ,main ,listuser, addService};
