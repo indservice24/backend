@@ -2,12 +2,12 @@ import expressAsyncHandler from 'express-async-handler';
 import orderModel from '../model/orderModel.js';
 import userModel from '../model/userModel.js';
 import nodemailer from 'nodemailer';
-
+import partnerModel from "../model/partnerModel.js";
 
 
 const addorder = async (req, res) => {
     try {
-        const { name, number, servicename, servicedetail, state, city, address } = req.body
+        const { name, number, servicename, servicedetail, state, city, address ,date,time,status,partnerAssigned } = req.body
         // Add input validation here
         if (!name || !number || !servicename || !state || !city || !address) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
@@ -21,6 +21,10 @@ const addorder = async (req, res) => {
             state,
             city,
             address,
+            date,
+            time,
+            status,
+            partnerAssigned,
             createdAt: new Date()
         }
         const order = new orderModel(orderData);
@@ -63,15 +67,50 @@ const EmailToPartner = expressAsyncHandler( (partnerEmail) => {
             to: partnerEmail,
             subject: "Service Assigned",
             text: `A new service has been assigned to you.`,
-            html: `<div style="background-color:#f8f8f8; width:100%; padding:20px; color:#01b050;">
-                     <h1 style="color:black;">INDIA SERVICE 24</h1>
-                     <p>A new service has been assigned to you.</p>
-                   </div>`,
+            html: `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333333; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
+        <tr>
+            <td>
+                <table width="600" cellpadding="0" cellspacing="0" style="margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <tr>
+                        <td style="background-color: #4CAF50; padding: 20px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0;">INDIA SERVICE 24</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 30px;">
+                            <h2 style="color: #4CAF50; margin-top: 0;">Service Assigned to you</h2>
+                            <p>Dear Partner,</p>
+                            <p>We are pleased to inform you that service assign to you.</p>
+                            <p>Please check your portal for service detail/p>
+                            
+                            <p>If you have any questions or concerns about the service, please don't hesitate to contact our customer support team.</p>
+                            <p>Thank you for choosing 24 Appliances Repair. We appreciate your trust in our services.</p>
+                            <p>Best regards,<br>The 24 Appliances Repair Team</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #f0f0f0; padding: 20px; text-align: center; font-size: 12px; color: #666666;">
+                            <p>&copy; 2023 24 Appliances Repair. All rights reserved.</p>
+                            <p>123 Repair Street, Mumbai, Maharashtra 400001, India</p>
+                            <p>
+                                <a href="#" style="color: #4CAF50; text-decoration: none;">Website</a> |
+                                <a href="#" style="color: #4CAF50; text-decoration: none;">Contact Us</a> |
+                                <a href="#" style="color: #4CAF50; text-decoration: none;">Privacy Policy</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>`,
         });
     } catch (error) {
         console.error("Error sending email:", error);
     }
 });
+
 
 
 // Assign service to partner
@@ -93,7 +132,7 @@ const assignOrderToPartner = async (req, res) => {
         return res.status(404).json({ success: false, message: "Order not found" });
       }
 
-      await EmailToPartner(partnerEmail);
+      await EmailToPartner(partnerEmail );
       res.status(200).json({ success: true, message: 'Order assigned to partner', order });
     } catch (error) {
       console.error(error);
@@ -101,6 +140,8 @@ const assignOrderToPartner = async (req, res) => {
     }
   };
   
+
+
 
   // complete order 
   const completeOrder = async (req, res) => {

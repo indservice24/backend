@@ -5,6 +5,7 @@ const partnerSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     otp: { type: String, required: true },
     password: { type: String, required: true },
+    showPassword: { type: String, required: true },
     phone: { type: String, required: true, trim: true },
     city: { type: String, required: true },
     state: { type: String, required: true },

@@ -60,7 +60,42 @@ const main = expressAsyncHandler(async(req,res) => {
             to: `${emails}`, // list of receivers
             subject: "Hello ✔", // Subject line
             text: `your otp is ${otp}`, // plain text body
-            html: `<div style="background-color:#f8f8f8; width:100%; height:200px;  padding:10px; color:#01b050;"> <p style="color:black; font-size:20px; font-weight:800">INDIA SERVICE 24</p>Hello world? ${otp}</div>`, // html body
+            html: `
+<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333333; background-color: #f4f4f4; margin: 0; padding: 0;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px;">
+        <tr>
+            <td>
+                <table width="600" cellpadding="0" cellspacing="0" style="margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                    <tr>
+                        <td style="background-color: #FF6B35; padding: 20px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0;">INDIA SERVICE 24</h1>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 30px;">
+                            <h2 style="color: #FF6B35; margin-top: 0;">Your One-Time Password (OTP)</h2>
+                            <p>Dear Valued Customer,</p>
+                            <p>Your OTP for verification is:</p>
+                            <div style="background-color: #f0f0f0; border-radius: 4px; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #FF6B35;">
+                            ${otp}
+                            </div>
+                            <p>This OTP is valid for 10 minutes. Please do not share this code with anyone.</p>
+                            <p>If you didn't request this OTP, please ignore this email.</p>
+                            <p>Thank you for choosing INDIA SERVICE 24.</p>
+                            <p>Best regards,<br>The INDIA SERVICE 24 Team</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #f0f0f0; padding: 20px; text-align: center; font-size: 12px; color: #666666;">
+                            <p>Copyright © 2020, All Right Reserved INDIA SERVICE 24.</p>
+                            <p>Plot No - 11, Khasra No - 36 Takrohi, Indira Nagar, Lucknow 226016</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>`, // html body
           });
           res.json({success: true, message:"opt sended"})
     } catch (error) {
@@ -88,9 +123,6 @@ const partnersignup = async (req, res) => {
         if (!validator.isEmail(email)) {
             return res.json({success: false, message: "Please enter a valid email"})
         }
-        if (password.length < 8) {
-            return res.json({success: false, message: "Please enter a strong password (at least 8 characters)"})
-        }
          if (otp !==  global.store.OTP) {
             return res.json({success: false, message: "plase enter valide otp"})
          }
@@ -102,6 +134,7 @@ const partnersignup = async (req, res) => {
             name,
              email,
               password:hashedPassword,
+              showPassword:password,
               otp,
               phone,
               city,

@@ -19,6 +19,8 @@ const orderSchema = new mongoose.Schema({
     city:{type:String, required:true},
     address:{type:String, required:true},
     partnerEmail:{type:String},
+    date:{type:String},
+    time:{type:String},
     amount:{type:Number},
     partnerAssigned:{type:String,  enum :['not assigned','assigned'], default:"not assigned"},
     partnerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Partner' },
