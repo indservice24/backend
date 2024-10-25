@@ -7,6 +7,11 @@ import serviceRouter from "./routes/serviceRoute.js"
 import orderRouter from "./routes/orderRoute.js"
 import partnerRouter from "./routes/partnerRoute.js"
 import contactRouter from "./routes/contactRoute.js"
+import phoneRouter from "./routes/phoneRoute.js"
+import phoneBookRouter from "./routes/phoneBookRoute.js"
+
+
+
 
 // App config
 const app = express()
@@ -29,6 +34,10 @@ app.use('/api/service',serviceRouter)
 app.use('/api/order',orderRouter)
 app.use('/api/partner',partnerRouter)
 app.use('/api/contact',contactRouter)
+app.use('/api/phone',phoneRouter)
+app.use('/api/phonebook',phoneBookRouter)
+
+
 
 
 
