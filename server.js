@@ -39,6 +39,7 @@ app.use('/api/phonebook',phoneBookRouter)
 
 
 
+app.use("/api/images",express.static('upload'))
 
 
 
