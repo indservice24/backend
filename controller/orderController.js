@@ -145,7 +145,7 @@ const assignOrderToPartner = async (req, res) => {
 
   // complete order 
   const completeOrder = async (req, res) => {
-    const { orderId ,amount,chargedItem } = req.body;
+    const { orderId ,amount,chargedItem, term , partnerName , partnerNumber} = req.body;
     try {
       if (!orderId || !amount) {
         return res.status(400).json({ success: false, message: "Missing required fields" });
@@ -157,7 +157,10 @@ const assignOrderToPartner = async (req, res) => {
           status: 'completed',
           updatedAt: new Date(),
           amount,
-          chargedItem
+          chargedItem,
+          term,
+          partnerName,
+          partnerNumber
         },
         { new: true }
       );
@@ -200,4 +203,22 @@ const assignOrderToPartner = async (req, res) => {
   }     
 
 
-export {addorder,listorder,assignOrderToPartner,completeOrder,cancelOrder}
+// service delete 
+
+  const removeService = async (req, res) => {
+    try {
+      const{id} = req.body;
+      const deleteService = await orderModel.findByIdAndDelete(id);
+      if(!deleteService){
+        return res.json({success: false, message:"Couldn't find"});
+      }
+  
+      res.json({success: true, message: 'Service remove  successfully'});
+  
+    } catch (error) {
+        res.json({success: false, message: error.message})
+    }
+  }
+
+
+export {addorder,listorder,assignOrderToPartner,completeOrder,cancelOrder , removeService}

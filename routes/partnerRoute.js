@@ -1,5 +1,5 @@
 import express from "express"
-import {partnersignup, partnerlogin, main,listuser, addService} from "../controller/partnerController.js"
+import {partnersignup, partnerlogin, main,listuser, addService, partnerDelete} from "../controller/partnerController.js"
 
 
 
@@ -13,6 +13,7 @@ partnerRouter.post("/partnerlogin", partnerlogin)
 partnerRouter.post("/send", main)
 partnerRouter.get("/listuser", listuser)
 partnerRouter.post("/addservice", addService)
+partnerRouter.post("/partnerRemove", partnerDelete)
 
 
 export default partnerRouter;

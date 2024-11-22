@@ -9,6 +9,8 @@ import partnerRouter from "./routes/partnerRoute.js"
 import contactRouter from "./routes/contactRoute.js"
 import phoneRouter from "./routes/phoneRoute.js"
 import phoneBookRouter from "./routes/phoneBookRoute.js"
+import fs from 'fs'
+import path, { dirname } from "path"
 
 
 
@@ -23,10 +25,12 @@ connectDB()
 
 
 
-
 // middlewares
-app.use(express.json({ limit: '50mb' }))
+app.use(express.json({ limit: '100mb' }))
 app.use(cors())
+
+
+
 
 //api endpoints
 app.use('/api/user',userRouter)
@@ -38,7 +42,7 @@ app.use('/api/phone',phoneRouter)
 app.use('/api/phonebook',phoneBookRouter)
 
 
-
+app.use("/api/images",express.static('upload'))
 
 
 

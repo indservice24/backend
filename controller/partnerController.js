@@ -41,8 +41,8 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // true for port 465, false for other ports
     auth: {
-      user: "rupeshkw9334@gmail.com",
-      pass: "fzxllavvltlcwkun",
+      user: "indservice24@gmail.com",
+      pass: "aryytpvltravirhg",
     },
   });
 
@@ -56,7 +56,7 @@ const main = expressAsyncHandler(async(req,res) => {
     console.log(global.store.OTP);
     try {
         const info = await transporter.sendMail({
-            from: 'rupeshkw9334@gmail.com', // sender address
+            from: 'indservice24@gmail.com', // sender address
             to: `${emails}`, // list of receivers
             subject: "Hello ✔", // Subject line
             text: `your otp is ${otp}`, // plain text body
@@ -190,7 +190,21 @@ const addService = async (req,res) => {
 }
 
 
+const partnerDelete = async (req, res) => {
+    try {
+      const{id} = req.body;
+      const DltPartner = await partnerModel.findByIdAndDelete(id);
+      if(!DltPartner){
+        return res.json({success: false, message:"Couldn't find"});
+      }
+  
+      res.json({success: true, message: 'Partner remove  successfully'});
+  
+    } catch (error) {
+        res.json({success: false, message: error.message})
+    }
+  }
 
 
 
-export { partnerlogin, partnersignup ,main ,listuser, addService};
+export { partnerlogin, partnersignup ,main ,listuser, addService, partnerDelete};

@@ -5,8 +5,8 @@ import mongoose from "mongoose";
     const serviceCharges = new mongoose.Schema({
         id: {type:Number},
         chargedService: {type:String},
-        charged: {type:Number}
-        
+        charged: {type:Number},
+        notes: {type:String}
     })
 
 
@@ -25,7 +25,10 @@ const orderSchema = new mongoose.Schema({
     partnerAssigned:{type:String,  enum :['not assigned','assigned'], default:"not assigned"},
     partnerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Partner' },
     chargedItem: [serviceCharges],
+    partnerName: {type:String},
+    partnerNumber: {type:String},
     cancelledNote: {type:String},
+    term: {type:String},
     status: { type: String, enum: ['completed','cancelled','inprogress'], default: 'inprogress' },
     completedAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
