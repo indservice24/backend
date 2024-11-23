@@ -42,6 +42,10 @@ app.use('/api/phone',phoneRouter)
 app.use('/api/phonebook',phoneBookRouter)
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 464b45d511b17694cc2ac60b4738ddb50f9c44eb
 app.use("/api/images",express.static('upload'))
 
 
