@@ -102,8 +102,8 @@ const transporter = nodemailer.createTransport({
     port: 587,
     secure: false, // true for port 465, false for other ports
     auth: {
-      user: "rupeshkw9334@gmail.com",
-      pass: "fzxllavvltlcwkun",
+      user: "indservice24@gmail.com",
+      pass: "emlzdtbcwtydvlip",
     },
   });
 
@@ -122,7 +122,7 @@ const adminbymain = expressAsyncHandler(async(req,res) => {
         global.store.OTP = otp;
         console.log(global.store.OTP);
         const info = await transporter.sendMail({
-            from: 'rupeshkw9334@gmail.com', // sender address
+            from: 'indservice24@gmail.com', // sender address
             to: `${emails}`, // list of receivers
             subject: "Hello ✔", // Subject line
             text: `your otp is ${otp}`, // plain text body
